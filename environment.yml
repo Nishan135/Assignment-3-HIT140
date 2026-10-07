@@ -1,0 +1,12 @@
+name: hit140
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - ipykernel
+  - pandas
+  - numpy
+prefix: /opt/anaconda3/envs/hit140

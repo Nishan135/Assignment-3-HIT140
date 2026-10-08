@@ -1,0 +1,10 @@
+,coef,p_value,std_coef
+const,0.0878,0.612,-0.0
+value_ratio_log,1.0964,0.0001,0.7283
+caps_per_million_diff,-0.0045,0.9379,-0.0132
+xg_matchup_edge,-0.126,0.7015,-0.0435
+clinical_finishing_diff,-0.4388,0.1661,-0.1581
+shot_volume_diff,-0.0091,0.8555,-0.0248
+set_piece_edge,-0.038,0.6933,-0.0542
+keeper_workload_diff,-0.0305,0.7493,-0.0338
+continental_familiarity_diff,0.0234,0.9518,0.005

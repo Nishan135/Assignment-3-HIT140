@@ -1,20 +1,4 @@
-"""
-Linear Regression 2.1 - Predicting goal difference in FIFA World Cup 2026 matches.
-
-Input : lr21_creative_dataset.csv  (built by build_lr21_creative_dataset.py)
-        104 matches, 8 pre-match explanatory variables, response = goal_diff
-        (goal_diff = home score - away score)
-
-Steps
------
-1. Load and inspect the data
-2. Explore: distributions, linearity scatterplots, correlation heatmap, VIF
-3. Train/test split (80/20) and build a multiple linear regression (sklearn)
-4. Evaluate: MAE, MSE, RMSE, NRMSE, R2  + comparison with a mean baseline
-5. Build the same model with statsmodels (coefficients, p-values, diagnostics)
-6. Check robustness with 5-fold cross-validation
-7. Residual diagnostics and plots
-"""
+#Linear Regression 2.1 - Predicting goal difference in FIFA World Cup 2026 matches.
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -44,7 +28,6 @@ def evaluate(y_true, y_pred, label):
     return {"Model": label, "MAE": mae, "MSE": mse, "RMSE": rmse, "NRMSE": nrmse, "R2": r2}
 
 
-# ---------------------------------------------------------------- 1. LOAD
 df = pd.read_csv("lr21_creative_dataset.csv")
 print("Shape:", df.shape)
 print("Missing values:", int(df[FEATURES + [TARGET]].isna().sum().sum()))
@@ -53,8 +36,7 @@ print(df[FEATURES + [TARGET]].describe().T.round(3), "\n")
 X = df[FEATURES]
 y = df[TARGET]
 
-# ---------------------------------------------------------------- 2. EXPLORE
-# 2a. response distribution
+# 2a. response distribution of data
 plt.figure(figsize=(6, 4))
 sns.histplot(y, bins=range(-5, 8), discrete=True, color="steelblue")
 plt.title("Distribution of goal difference")
@@ -94,7 +76,7 @@ vif = pd.DataFrame({
 })
 print("Variance inflation factors:\n", vif.round(2).to_string(index=False), "\n")
 
-# ---------------------------------------------------------------- 3. SPLIT + TRAIN (sklearn)
+#  3. SPLIT + TRAIN (sklearn)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=RANDOM_STATE
 )
@@ -108,7 +90,7 @@ for name, coef in zip(FEATURES, model.coef_):
     equation += f" {'+' if coef >= 0 else '-'} {abs(coef):.4f} ({name})"
 print("\nRegression equation (sklearn, training set):\n", equation, "\n")
 
-# ---------------------------------------------------------------- 4. EVALUATE + BASELINE
+#  4. EVALUATE + BASELINE
 y_pred_train = model.predict(X_train)
 y_pred_test = model.predict(X_test)
 
@@ -123,7 +105,7 @@ results = pd.DataFrame([
 print("Performance:\n", results.round(4).to_string(index=False), "\n")
 results.to_csv("model_performance.csv", index=False)
 
-# ---------------------------------------------------------------- 5. STATSMODELS
+#  5. STATSMODELS
 ols = sm.OLS(y_train, sm.add_constant(X_train)).fit()
 print(ols.summary(), "\n")
 
@@ -137,14 +119,14 @@ coef_table = pd.DataFrame({
 print("Coefficient table:\n", coef_table, "\n")
 coef_table.to_csv("coefficients.csv")
 
-# ---------------------------------------------------------------- 6. CROSS-VALIDATION
+#  6. CROSS-VALIDATION
 kf = KFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 cv_r2 = cross_val_score(LinearRegression(), X, y, cv=kf, scoring="r2")
 cv_rmse = -cross_val_score(LinearRegression(), X, y, cv=kf, scoring="neg_root_mean_squared_error")
 print(f"5-fold CV R2   : {cv_r2.round(3)}  mean = {cv_r2.mean():.3f}")
 print(f"5-fold CV RMSE : {cv_rmse.round(3)}  mean = {cv_rmse.mean():.3f}\n")
 
-# ---------------------------------------------------------------- 7. PLOTS + RESIDUALS
+#  7. PLOTS + RESIDUALS
 # predicted vs actual
 plt.figure(figsize=(6, 6))
 plt.scatter(y_test, y_pred_test, color="darkorange", alpha=0.8)
@@ -171,7 +153,7 @@ plt.tight_layout()
 plt.savefig("fig5_residual_diagnostics.png", dpi=150)
 plt.close()
 
-# standardised coefficients bar chart
+# standardised coefficients bar chart.
 plt.figure(figsize=(8, 4.5))
 sc = coef_table["std_coef"].drop("const").sort_values()
 plt.barh(sc.index, sc.values, color=["tomato" if v < 0 else "steelblue" for v in sc.values])

@@ -32,16 +32,19 @@ SOURCE_FILE = next((p for p in SOURCE_CANDIDATES if p.exists()), None)
 OUTPUT_FILE = BASE_DIR / "linear_regression_2_2_dataset.csv"
 
 
+# Actual feature names used in Objective 2.1 (Lr21 regression.PY).
+# Compare concepts as well as names when checking the <=4 shared-predictor rule.
 OBJECTIVE_2_1_PREDICTORS = [
-    "Team_FIFA_Ranking", "Opponent_FIFA_Ranking", "Team_ELO", "Opponent_ELO",
-    "Team_Rest_Days", "Team_Prev_Avg_Goals_Scored",
-    "Opponent_Prev_Avg_Goals_Conceded", "Team_Prev_Avg_Shots_On_Target",
+    "value_ratio_log", "caps_per_million_diff", "xg_matchup_edge",
+    "clinical_finishing_diff", "shot_volume_diff", "set_piece_edge",
+    "keeper_workload_diff", "continental_familiarity_diff",
 ]
+
 PREDICTORS = [
-    # shared with 2.1 (4)
+    # Objective 2.2 predictors (verify conceptual overlap with 2.1)
     "Team_ELO", "Opponent_ELO",
     "Team_Prev_Avg_Goals_Scored", "Opponent_Prev_Avg_Goals_Conceded",
-    # new in 2.2 (4)
+    # additional Objective 2.2 predictors
     "Host_Nation", "Knockout_Stage",
     "Team_Squad_Market_Value_M_EUR", "Team_Avg_Squad_Age",
 ]
@@ -225,7 +228,7 @@ print("\nDuplicate rows:", df.duplicated().sum())
 print("\nRows per Match_ID:\n", df["Match_ID"].value_counts().value_counts())
 
 
-# 2. Predictors and target (8 predictors; 4 shared with Objective 2.1)
+# 2. Predictors and target (8 predictors; verify conceptual overlap)
 
 predictors = [
     "Team_ELO",                          # shared with 2.1
@@ -239,11 +242,8 @@ predictors = [
 ]
 target = "Goals_Scored"
 
-objective_2_1 = [
-    "Team_FIFA_Ranking", "Opponent_FIFA_Ranking", "Team_ELO", "Opponent_ELO",
-    "Team_Rest_Days", "Team_Prev_Avg_Goals_Scored",
-    "Opponent_Prev_Avg_Goals_Conceded", "Team_Prev_Avg_Shots_On_Target",
-]
+objective_2_1 = OBJECTIVE_2_1_PREDICTORS
+
 shared = sorted(set(predictors) & set(objective_2_1))
 print(f"\nPredictors: {len(predictors)} | shared with Objective 2.1: {len(shared)}")
 assert len(predictors) == 8 and len(shared) <= 4, "Predictor rules violated."

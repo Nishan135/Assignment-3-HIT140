@@ -28,7 +28,9 @@ def evaluate(y_true, y_pred, label):
     return {"Model": label, "MAE": mae, "MSE": mse, "RMSE": rmse, "NRMSE": nrmse, "R2": r2}
 
 
-df = pd.read_csv("lr21_creative_dataset.csv")
+from pathlib import Path
+DATASET_PATH = Path(__file__).resolve().parent / "lr21_creative_dataset.csv"
+df = pd.read_csv(DATASET_PATH, encoding="cp1252")
 print("Shape:", df.shape)
 print("Missing values:", int(df[FEATURES + [TARGET]].isna().sum().sum()))
 print(df[FEATURES + [TARGET]].describe().T.round(3), "\n")
